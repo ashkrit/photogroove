@@ -16,16 +16,11 @@ view model =
 
 
 viewThumpnail selectedUrl thumb =
-    if selectedUrl == thumb.url then
-        img
-            [ src (urlPrefix ++ thumb.url)
-            , class "selected"
-            ]
-            []
-
-    else
-        img [ src (urlPrefix ++ thumb.url) ]
-            []
+    img
+        [ src (urlPrefix ++ thumb.url)
+        , classList [ ( "selected", selectedUrl == thumb.url ) ]
+        ]
+        []
 
 
 intialModel =
