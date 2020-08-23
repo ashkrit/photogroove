@@ -1,8 +1,7 @@
 module PhotoGroove exposing (main)
 
 import Browser
-import Debugger.Expando exposing (Msg)
-import Html exposing (div, h1, img, text)
+import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)
 
@@ -39,7 +38,7 @@ update msg model =
     else
         model
 
-
+viewThumpnail : String -> Photo -> Html Msg
 viewThumpnail selectedUrl thumb =
     img
         [ src (urlPrefix ++ thumb.url)
