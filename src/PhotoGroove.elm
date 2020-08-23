@@ -11,10 +11,10 @@ urlPrefix =
     "http://elm-in-action.com/"
 
 
-type alias Msg =
-    { description : String
-    , data : String
-    }
+type Msg
+    = ClickedPhoto String
+    | ClickedSize ThumbnailSize
+    | ClickedSurpriseMe
 
 
 type ThumbnailSize
@@ -28,12 +28,12 @@ view model =
     div [ class "content" ]
         [ h1 [] [ text "Photo Groove" ]
         , button
-            [ onClick { description = "ClickedSurpriseMe", data = "" } ]
+            [ onClick ClickedSurpriseMe ]
             [ text "Surprise Me!" ]
         , h3 [] [ text "Thumbnail Size:" ]
         , div [ id "choose-size" ]
-            [ viewSizeChooser Small, viewSizeChooser Medium, viewSizeChooser Large ]
-        , div [ id "thumbnails" ]
+            (List.map viewSizeChooser [ Small, Medium, Large ])
+        , div [ id "thumbnails", class (sizeToString model.chosenSize) ]
             (List.map (viewThumpnail model.selectedUrl) model.photos)
         , img
             [ class "large"
@@ -45,15 +45,15 @@ view model =
 
 update : Msg -> Model -> Model
 update msg model =
-    case msg.description of
-        "ClickedPhoto" ->
-            { model | selectedUrl = msg.data }
+    case msg of
+        ClickedPhoto url ->
+            { model | selectedUrl = url }
 
-        "ClickedSurpriseMe" ->
+        ClickedSurpriseMe ->
             { model | selectedUrl = "2.jpeg" }
 
-        _ ->
-            model
+        ClickedSize size ->
+            { model | chosenSize = size }
 
 
 viewThumpnail : String -> Photo -> Html Msg
@@ -61,7 +61,7 @@ viewThumpnail selectedUrl thumb =
     img
         [ src (urlPrefix ++ thumb.url)
         , classList [ ( "selected", selectedUrl == thumb.url ) ]
-        , onClick { description = "ClickedPhoto", data = thumb.url }
+        , onClick (ClickedPhoto thumb.url)
         ]
         []
 
@@ -69,7 +69,7 @@ viewThumpnail selectedUrl thumb =
 viewSizeChooser : ThumbnailSize -> Html Msg
 viewSizeChooser size =
     label []
-        [ input [ type_ "radio", name "size" ] []
+        [ input [ type_ "radio", name "size", onClick (ClickedSize size) ] []
         , text (sizeToString size)
         ]
 
@@ -106,7 +106,7 @@ intialModel =
         , { url = "3.jpeg" }
         ]
     , selectedUrl = "3.jpeg"
-    , chosenSize = Medium
+    , chosenSize = Large
     }
 
 
