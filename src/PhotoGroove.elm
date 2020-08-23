@@ -35,15 +35,14 @@ view model =
 
 
 update : Msg -> Model -> Model
-update msg model =
-    if msg.description == "ClickedPhoto" then
-        { model | selectedUrl = msg.data }
-
-    else if msg.description == "ClickedSurpriseMe" then
-        { model | selectedUrl = "2.jpeg" }
-
-    else
-        model
+update msg model = 
+    case msg.description of
+        "ClickedPhoto" ->
+            { model | selectedUrl = msg.data }
+        "ClickedSurpriseMe" ->
+            { model | selectedUrl = "2.jpeg" }
+        _ ->
+            model
 
 
 viewThumpnail : String -> Photo -> Html Msg
