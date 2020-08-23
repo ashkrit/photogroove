@@ -27,19 +27,11 @@ view : Model -> Html Msg
 view model =
     div [ class "content" ]
         [ h1 [] [ text "Photo Groove" ]
-        , button
-            [ onClick ClickedSurpriseMe ]
-            [ text "Surprise Me!" ]
+        , button [ onClick ClickedSurpriseMe ] [ text "Surprise Me!" ]
         , h3 [] [ text "Thumbnail Size:" ]
-        , div [ id "choose-size" ]
-            (List.map viewSizeChooser [ Small, Medium, Large ])
-        , div [ id "thumbnails", class (sizeToString model.chosenSize) ]
-            (List.map (viewThumpnail model.selectedUrl) model.photos)
-        , img
-            [ class "large"
-            , src (urlPrefix ++ "large/" ++ model.selectedUrl)
-            ]
-            []
+        , div [ id "choose-size" ] (List.map viewSizeChooser [ Small, Medium, Large ])
+        , div [ id "thumbnails", class (sizeToString model.chosenSize) ] (List.map (viewThumpnail model.selectedUrl) model.photos)
+        , img [ class "large", src (urlPrefix ++ "large/" ++ model.selectedUrl) ] []
         ]
 
 
