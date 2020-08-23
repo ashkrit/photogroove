@@ -45,7 +45,13 @@ type alias Photo =
     { url : String }
 
 
-intialModel : { photos : List Photo, selectedUrl : String }
+type alias Model =
+    { photos : List Photo
+    , selectedUrl : String
+    }
+
+
+intialModel : Model
 intialModel =
     { photos =
         [ { url = "1.jpeg" }
