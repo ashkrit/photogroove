@@ -1,6 +1,7 @@
 module PhotoGroove exposing (main)
 
 import Browser
+import Debugger.Expando exposing (Msg)
 import Html exposing (div, h1, img, text)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)
@@ -11,6 +12,13 @@ urlPrefix =
     "http://elm-in-action.com/"
 
 
+type alias Msg =
+    { description : String
+    , data : String
+    }
+
+
+view : Model -> Html Msg
 view model =
     div [ class "content" ]
         [ h1 [] [ text "Photo Groove" ]
