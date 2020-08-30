@@ -173,11 +173,6 @@ intialModel =
     }
 
 
-photoArray : Array Photo
-photoArray =
-    Array.fromList intialModel.photos
-
-
 intialCmd : Cmd Msg
 intialCmd =
     Http.get
