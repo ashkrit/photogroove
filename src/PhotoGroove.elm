@@ -15,6 +15,11 @@ urlPrefix =
     "http://elm-in-action.com/"
 
 
+listPhotoUrl : String
+listPhotoUrl =
+    "http://elm-in-action.com/photos/list"
+
+
 type Msg
     = ClickedPhoto String
     | ClickedSize ThumbnailSize
@@ -163,12 +168,8 @@ type alias Model =
 intialModel : Model
 intialModel =
     { status = Loading
-    , photos =
-        [ { url = "1.jpeg" }
-        , { url = "2.jpeg" }
-        , { url = "3.jpeg" }
-        ]
-    , selectedUrl = "3.jpeg"
+    , photos = []
+    , selectedUrl = ""
     , chosenSize = Large
     }
 
@@ -176,7 +177,7 @@ intialModel =
 intialCmd : Cmd Msg
 intialCmd =
     Http.get
-        { url = "http://elm-in-action.com/photos/list"
+        { url = listPhotoUrl
         , expect = Http.expectString GotPhotos
         }
 
