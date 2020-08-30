@@ -10,6 +10,7 @@ import Random
 import String
 
 
+
 urlPrefix : String
 urlPrefix =
     "http://elm-in-action.com/"
@@ -159,8 +160,6 @@ type Status
 
 type alias Model =
     { status : Status
-    , photos : List Photo
-    , selectedUrl : String
     , chosenSize : ThumbnailSize
     }
 
@@ -168,8 +167,6 @@ type alias Model =
 intialModel : Model
 intialModel =
     { status = Loading
-    , photos = []
-    , selectedUrl = ""
     , chosenSize = Large
     }
 
