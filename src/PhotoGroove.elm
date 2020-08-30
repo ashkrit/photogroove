@@ -88,7 +88,7 @@ sizeToString size =
 
 randomPhotoPicker : Random.Generator Int
 randomPhotoPicker =
-    Random.int 0 ((Array.length photoArray) - 1)
+    Random.int 0 (Array.length photoArray - 1)
 
 
 type alias Photo =
