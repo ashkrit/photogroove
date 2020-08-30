@@ -1,5 +1,6 @@
 module PhotoGroove exposing (main)
 
+import Array exposing (Array)
 import Browser
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -100,6 +101,11 @@ intialModel =
     , selectedUrl = "3.jpeg"
     , chosenSize = Large
     }
+
+
+photoArray : Array Photo
+photoArray =
+    Array.fromList intialModel.photos
 
 
 main =
