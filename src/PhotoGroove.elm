@@ -3,12 +3,12 @@ module PhotoGroove exposing (main)
 import Array exposing (Array)
 import Browser
 import Html exposing (..)
-import Html.Attributes exposing (..)
+import Html.Attributes as Attr exposing (..)
 import Html.Events exposing (onClick)
 import Http
+import Json.Decode exposing (Decoder, int, list, string, succeed)
+import Json.Decode.Pipeline as Json exposing (optional, required)
 import Random
-import String
-
 
 
 urlPrefix : String
@@ -18,7 +18,7 @@ urlPrefix =
 
 listPhotoUrl : String
 listPhotoUrl =
-    "http://elm-in-action.com/photos/list"
+    "http://elm-in-action.com/photos/list.json"
 
 
 type Msg
@@ -26,7 +26,7 @@ type Msg
     | ClickedSize ThumbnailSize
     | ClickedSurpriseMe
     | GotRandomPhoto Photo
-    | GotPhotos (Result Http.Error String)
+    | GotPhotos (Result Http.Error (List Photo))
 
 
 type ThumbnailSize
@@ -88,14 +88,10 @@ update msg model =
         GotRandomPhoto photo ->
             ( { model | status = selectUrl photo.url model.status }, Cmd.none )
 
-        GotPhotos (Ok responseStr) ->
-            case String.split "," responseStr of
-                (firstUrl :: _) as urls ->
-                    let
-                        photos =
-                            List.map Photo urls
-                    in
-                    ( { model | status = Loaded photos firstUrl }, Cmd.none )
+        GotPhotos (Ok photos) ->
+            case photos of
+                first :: _ ->
+                    ( { model | status = Loaded photos first.url }, Cmd.none )
 
                 [] ->
                     ( { model | status = Errored "0 photos found" }, Cmd.none )
@@ -108,6 +104,7 @@ viewThumpnail : String -> Photo -> Html Msg
 viewThumpnail selectedUrl thumb =
     img
         [ src (urlPrefix ++ thumb.url)
+        , title (thumb.title ++ " [" ++ String.fromInt thumb.size ++ " KB]")
         , classList [ ( "selected", selectedUrl == thumb.url ) ]
         , onClick (ClickedPhoto thumb.url)
         ]
@@ -149,7 +146,23 @@ selectUrl url status =
 
 
 type alias Photo =
-    { url : String }
+    { url : String
+    , size : Int
+    , title : String
+    }
+
+
+photoDecoder : Decoder Photo
+photoDecoder =
+    succeed buildPhoto
+        |> Json.required "url" string
+        |> Json.required "size" int
+        |> optional "title" string "(untitle)"
+
+
+buildPhoto : String -> Int -> String -> Photo
+buildPhoto url size title =
+    { url = url, size = size, title = title }
 
 
 type Status
@@ -175,7 +188,7 @@ intialCmd : Cmd Msg
 intialCmd =
     Http.get
         { url = listPhotoUrl
-        , expect = Http.expectString GotPhotos
+        , expect = Http.expectJson GotPhotos (Json.Decode.list photoDecoder)
         }
 
 
