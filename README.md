@@ -2,8 +2,9 @@
 Elm playground
 
 #Node modules required 
-npm install elm
-npm install elm-test
+Tested on Node - v12.18.3
+npm install -g elm 
+npm install -g elm-test
 
 
 #Build - 
