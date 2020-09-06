@@ -2,10 +2,13 @@ module PhotoGrooveTests exposing (..)
 
 import Expect exposing (Expectation)
 import Fuzz exposing (Fuzzer, int, list, string)
+import Html.Attributes exposing (src)
 import Json.Decode exposing (decodeString, decodeValue)
 import Json.Encode as Encode
 import PhotoGroove exposing (..)
 import Test exposing (..)
+import Test.Html.Query as Query
+import Test.Html.Selector exposing (attribute, tag, text)
 
 
 decoderTest : Test
@@ -66,3 +69,14 @@ slidHueSetsHue =
                 |> Tuple.first
                 |> .hue
                 |> Expect.equal amount
+
+
+noPhotosNoThumbnails : Test
+noPhotosNoThumbnails =
+    test "No thumbnails" <|
+        \_ ->
+            intialModel
+                |> PhotoGroove.view
+                |> Query.fromHtml
+                |> Query.findAll [ tag "img" ]
+                |> Query.count (Expect.equal 0)

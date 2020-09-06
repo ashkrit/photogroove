@@ -1,4 +1,4 @@
-port module PhotoGroove exposing (main,photoDecoder,intialModel,update,Msg(..))
+port module PhotoGroove exposing (main,photoDecoder,intialModel,update,Msg(..),view)
 
 import Array exposing (Array)
 import Browser
@@ -90,7 +90,7 @@ viewLoaded photos selectedUrl model =
 applyFilters : Model -> ( Model, Cmd Msg )
 applyFilters model =
     case model.status of
-        Loaded photos selectUr ->
+        Loaded _ selectUr ->
             let
                 filters =
                     [ { name = "Hue", amount = toFloat model.hue / 11 }
@@ -262,9 +262,9 @@ intialModel =
     { status = Loading
     , activity = ""
     , chosenSize = Large
-    , hue = 5
+    , hue = 0
     , ripple = 5
-    , noise = 5
+    , noise = 0
     }
 
 
