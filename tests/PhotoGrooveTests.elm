@@ -8,10 +8,9 @@ import Test exposing (..)
 
 decoderTest : Test
 decoderTest =
-    test "Title default to (untitled)"
-        (\_ ->
+    test "Title default to (untitled)" <|
+        \_ ->
             """{"url":"fruits.com" , "size":5 }"""
                 |> decodeString PhotoGroove.photoDecoder
                 |> Expect.equal
                     (Ok { title = "(untitle)", url = "fruits.com", size = 5 })
-        )
