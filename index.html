@@ -48,6 +48,11 @@
             }
             )
         })
+
+        Pasta.addActivityListener(function (activity) {
+            console.log("Got some activity to send to elm", activity)
+            app.ports.activityChanges.send(activity)
+        })
     </script>
 </body>
 

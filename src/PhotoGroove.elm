@@ -31,6 +31,7 @@ type Msg
     | SlidHue Int
     | SlidRipple Int
     | SlidNoise Int
+    | GotActivity String
 
 
 type ThumbnailSize
@@ -52,6 +53,9 @@ type alias FilterOptions =
 port setFilters : FilterOptions -> Cmd msg
 
 
+port activityChanges : (String -> msg) -> Sub msg
+
+
 view : Model -> Html Msg
 view model =
     div [ class "content" ] <|
@@ -70,6 +74,7 @@ viewLoaded : List Photo -> String -> Model -> List (Html Msg)
 viewLoaded photos selectedUrl model =
     [ h1 [] [ text "Photo Groove" ]
     , button [ onClick ClickedSurpriseMe ] [ text "Surprise Me!" ]
+    , div [ class "activity" ] [ text model.activity ]
     , div [ class "filters" ]
         [ viewFilter SlidHue "Hue" model.hue
         , viewFilter SlidRipple "Ripple" model.ripple
@@ -152,6 +157,9 @@ update msg model =
 
         SlidNoise noise ->
             applyFilters { model | noise = noise }
+
+        GotActivity activity ->
+            ( { model | activity = activity }, Cmd.none )
 
 
 viewThumpnail : String -> Photo -> Html Msg
@@ -241,6 +249,7 @@ type Status
 
 type alias Model =
     { status : Status
+    , activity : String
     , chosenSize : ThumbnailSize
     , hue : Int
     , ripple : Int
@@ -251,6 +260,7 @@ type alias Model =
 intialModel : Model
 intialModel =
     { status = Loading
+    , activity = ""
     , chosenSize = Large
     , hue = 5
     , ripple = 5
@@ -272,9 +282,13 @@ main =
         { init = \_ -> ( intialModel, intialCmd )
         , view = view
         , update = update
-        , subscriptions = \_ -> Sub.none
+        , subscriptions = subscriptions
         }
 
+
+subscriptions : Model -> Sub Msg
+subscriptions _ =
+    activityChanges GotActivity
 
 rangeSlider : List (Attribute msg) -> List (Html msg) -> Html msg
 rangeSlider attributes children =
