@@ -1,7 +1,8 @@
 module PhotoGrooveTests exposing (..)
 
 import Expect exposing (Expectation)
-import Json.Decode as Decode exposing (decodeString,decodeValue)
+import Fuzz exposing (Fuzzer, int, list, string)
+import Json.Decode as Decode exposing (decodeString, decodeValue)
 import Json.Encode as Encode
 import PhotoGroove exposing (..)
 import Test exposing (..)
@@ -34,6 +35,20 @@ dynamicjsondecoderTest =
         \_ ->
             [ ( "url", Encode.string "fruits.com" )
             , ( "size", Encode.int 5 )
+            ]
+                |> Encode.object
+                |> decodeValue PhotoGroove.photoDecoder
+                |> Result.map .title
+                |> Expect.equal
+                    (Ok "(untitle)")
+
+
+propjsondecoderTest : Test
+propjsondecoderTest =
+    fuzz2 string int "Title default to (untitled) using property based test" <|
+        \url size ->
+            [ ( "url", Encode.string url )
+            , ( "size", Encode.int size )
             ]
                 |> Encode.object
                 |> decodeValue PhotoGroove.photoDecoder
