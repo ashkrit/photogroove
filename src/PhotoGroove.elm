@@ -6,10 +6,10 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (on, onClick)
 import Http
-import Json.Decode exposing (Decoder, at, int, list, string, succeed)
+import Json.Decode exposing (Decoder, at, int, list, string, succeed,Value)
 import Json.Decode.Pipeline as Json exposing (optional, required)
 import Json.Encode as Encode
-import Random exposing (float)
+import Random
 
 
 urlPrefix : String
@@ -276,14 +276,23 @@ intialCmd =
         }
 
 
-main : Program () Model Msg
+main : Program Float Model Msg
 main =
     Browser.element
-        { init = \_ -> ( intialModel, intialCmd )
+        { init = init
         , view = view
         , update = update
         , subscriptions = subscriptions
         }
+
+
+init : Float -> ( Model, Cmd Msg ) 
+init flags =
+    let
+        activity =
+            "Initializing Pasta v" ++ String.fromFloat flags
+    in
+    ( { intialModel | activity = activity }, intialCmd )
 
 
 subscriptions : Model -> Sub Msg
